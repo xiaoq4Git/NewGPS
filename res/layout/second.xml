@@ -9,10 +9,41 @@
     tools:context="com.codoon.btgpstest.SpeedActivity" >
 
     <Button
-        android:layout_centerHorizontal="true"
+        android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:onClick="onChangeSpeedActivityListener"
         android:text="配速模拟" />
+
+    <Button
+        android:id="@+id/record"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="126dp"
+        android:text="GPS线路回放" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/record"
+        android:layout_below="@+id/button2"
+        android:layout_marginTop="63dp"
+        android:text="GPS记录采点" />
+
+    <EditText
+        android:id="@+id/et2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/record"
+        android:layout_below="@+id/record"
+        android:layout_marginTop="43dp"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>

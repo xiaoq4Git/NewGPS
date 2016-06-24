@@ -1,5 +1,7 @@
 package com.codoon.btgpstest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import android.app.Service;
@@ -20,30 +22,48 @@ public class MockGpsService extends Service {
 	private MyBinder myBinder = new MyBinder();
 	private Handler handler = new Handler();
 	private LocationManager mLocationManager;
-	private static double unit = 0;
-	private static double paceValue = 0.000035;
 	private static double latitude = 0;
 	private static double longitude = 0;
 	private Random rad = new Random();;
 
-	public MockGpsService() {
-		Log.i(TAG, "服务初始化");
-		init();
+	private List<Double> latSendList = new ArrayList<Double>();
+	private List<Double> lonSendList = new ArrayList<Double>();
+	private int count = 0;
+	
+	public List<Double> getLatSendList() {
+		return latSendList;
 	}
 
-	public void init() {
-		latitude = 30.5525326188;
-		longitude = 104.0329972433;
+	public void setLatSendList(List<Double> latList) {
+		latSendList = latList;
 	}
-	
-	public static void setPaceValue(double speed) {
-		paceValue = speed;
+
+	public List<Double> getLonSendList() {
+		return lonSendList;
 	}
+
+	public void setLonSendList(List<Double> lonList) {
+		lonSendList = lonList;
+	}
+
+	public MockGpsService() {
+		Log.i(TAG, "服务初始化");
+//		init();
+	}
+
+//	public void init() {
+//		latitude = 30.5525326188;
+//		longitude = 104.0329972433;
+//	}
+//	
+//	public static void setPaceValue(double speed) {
+//		paceValue = speed;
+//	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO: Return the communication channel to the service.
-		Log.i(TAG, "BindService-->onBind()");
+		Log.i(TAG, "GpsService-->onBind()");
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		mLocationManager.addTestProvider(LocationManager.GPS_PROVIDER, false, false, false, false, true, true, true, 0,
 				/* magic */5);
@@ -77,15 +97,18 @@ public class MockGpsService extends Service {
 		handler.removeCallbacks(update_thread);
 		mLocationManager.removeTestProvider(LocationManager.GPS_PROVIDER);
 		mLocationManager.removeTestProvider(LocationManager.NETWORK_PROVIDER);
-		init();
+//		init();
 	}
 
 	Runnable update_thread = new Runnable() {
 		public void run() {
-//			unit = unit + 0.000035;
-			unit += paceValue;
-			if (unit > 1)
-				unit = 0;
+////			unit = unit + 0.000035;
+//			unit += paceValue;
+//			if (unit > 1)
+//				unit = 0;
+			latitude = latSendList.get(count);
+			longitude = lonSendList.get(count);
+			count++;
 			setMockLocation(LocationManager.GPS_PROVIDER);
 			setMockLocation(LocationManager.NETWORK_PROVIDER);
 			handler.postDelayed(update_thread, UPDATE_TIME);
@@ -103,8 +126,8 @@ public class MockGpsService extends Service {
 
 		// Location newLocation = new Location(LocationManager.GPS_PROVIDER);
 		Location newLocation = new Location(PROVIDER);
-		newLocation.setLatitude(latitude + unit);
-		newLocation.setLongitude(longitude + unit);
+		newLocation.setLatitude(latitude);
+		newLocation.setLongitude(longitude);
 		newLocation.setAltitude(500 + rad.nextFloat() * 50);
 		newLocation.setAccuracy(50.f);
 		newLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
