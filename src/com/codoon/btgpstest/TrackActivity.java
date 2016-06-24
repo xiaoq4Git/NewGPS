@@ -30,51 +30,51 @@ public class TrackActivity extends Activity {
 	private List<Double> latList = new ArrayList<Double>();
 	private List<Double> lonList = new ArrayList<Double>();
 	private static final String FILENAME = "/gpsdata/Sichuan.gpx";
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.second);
-		
+
 		Intent intent = new Intent(TrackActivity.this, MockGpsService.class);
-//		Log.i(TAG, "bindService()");
+		// Log.i(TAG, "bindService()");
 		bindService(intent, conn, Context.BIND_AUTO_CREATE);
 		initView();
 	}
-	
-	public void initView(){
-		editText2 = (EditText)this.findViewById(R.id.et2);
-		gpsRecord = (Button)this.findViewById(R.id.record);
+
+	public void initView() {
+		editText2 = (EditText) this.findViewById(R.id.et2);
+		gpsRecord = (Button) this.findViewById(R.id.record);
 		gpsRecord.setOnClickListener(new MySetOnClickListener());
 	}
-	
-	public void onChangeSpeedActivityListener(View view){
-		Intent intent = new Intent(this,SpeedActivity.class);
+
+	public void onChangeSpeedActivityListener(View view) {
+		Intent intent = new Intent(this, SpeedActivity.class);
 		startActivity(intent);
 		this.finish();
 	}
-	
+
 	private ServiceConnection conn = new ServiceConnection() {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			// TODO Auto-generated method stub
-//			Log.i(TAG, "onServiceDisconnected()");
+			// Log.i(TAG, "onServiceDisconnected()");
 		}
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			// TODO Auto-generated method stub
-//			Log.i(TAG, "onServiceConnected()");
+			// Log.i(TAG, "onServiceConnected()");
 			MockGpsService.MyBinder binder = (MockGpsService.MyBinder) service;
 			bindGpsService = binder.getService1();
 		}
 	};
-	
+
 	private class MySetOnClickListener implements OnClickListener {
 
 		@Override
 		public void onClick(View v) {
-			File file = new File(Environment.getExternalStorageDirectory(), FILENAME);
+			File file = new File(Environment.getExternalStorageDirectory(), FILENAME + editText2.getText().toString());
 			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 				try {
 					BufferedReader br = new BufferedReader(new FileReader(file));
@@ -83,7 +83,7 @@ public class TrackActivity extends Activity {
 					Pattern p = Pattern.compile("lat=\"(.+)\" lon=\"(.+)\"");
 					while ((line = br.readLine()) != null) {
 						Matcher m = p.matcher(line);
-						if(m.find()){
+						if (m.find()) {
 							latList.add(Double.parseDouble(m.group(1)));
 							lonList.add(Double.parseDouble(m.group(2)));
 						}
@@ -93,7 +93,7 @@ public class TrackActivity extends Activity {
 					bindGpsService.setLatSendList(latList);
 					bindGpsService.setLonSendList(lonList);
 					bindGpsService.startMockLocation();
-//					editText2.setText(sb.toString());
+					// editText2.setText(sb.toString());
 					Toast.makeText(TrackActivity.this, "读取GPS点成功", Toast.LENGTH_LONG).show();
 				} catch (Exception e) {
 					Toast.makeText(TrackActivity.this, "读取失败", Toast.LENGTH_SHORT).show();

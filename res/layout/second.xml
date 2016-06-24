@@ -34,16 +34,25 @@
         android:layout_marginTop="63dp"
         android:text="GPS记录采点" />
 
-    <EditText
-        android:id="@+id/et2"
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/record"
         android:layout_below="@+id/record"
-        android:layout_marginTop="43dp"
-        android:ems="10" >
+        android:layout_marginTop="28dp"
+        android:text="轨迹名称" />
 
-        <requestFocus />
+    <EditText
+        android:id="@+id/et2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:text="Sichuan.gpx" >
+
     </EditText>
 
 </RelativeLayout>

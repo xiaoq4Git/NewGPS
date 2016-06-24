@@ -18,31 +18,24 @@ import android.util.Log;
 
 public class MockGpsService extends Service {
 	public static final String TAG = MockGpsService.class.getName();
-	private static final int UPDATE_TIME = 1000;
+	private static final int UPDATE_TIME = 2000;
 	private MyBinder myBinder = new MyBinder();
 	private Handler handler = new Handler();
 	private LocationManager mLocationManager;
-	private static double latitude = 0;
-	private static double longitude = 0;
+	private static double LATITUDE = 0;
+	private static double LONGITUDE = 0;
 	private Random rad = new Random();;
 
-	private List<Double> latSendList = new ArrayList<Double>();
-	private List<Double> lonSendList = new ArrayList<Double>();
+	private static List<Double> latSendList = new ArrayList<Double>();
+	private static List<Double> lonSendList = new ArrayList<Double>();
 	private int count = 0;
 	
-	public List<Double> getLatSendList() {
-		return latSendList;
-	}
 
-	public void setLatSendList(List<Double> latList) {
+	public static void setLatSendList(List<Double> latList) {
 		latSendList = latList;
 	}
 
-	public List<Double> getLonSendList() {
-		return lonSendList;
-	}
-
-	public void setLonSendList(List<Double> lonList) {
+	public static void setLonSendList(List<Double> lonList) {
 		lonSendList = lonList;
 	}
 
@@ -51,14 +44,6 @@ public class MockGpsService extends Service {
 //		init();
 	}
 
-//	public void init() {
-//		latitude = 30.5525326188;
-//		longitude = 104.0329972433;
-//	}
-//	
-//	public static void setPaceValue(double speed) {
-//		paceValue = speed;
-//	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -79,39 +64,35 @@ public class MockGpsService extends Service {
 
 	public void startMockLocation() {
 		Log.i(TAG, "start mock");
-		handler.post(update_thread);
+		handler.post(update_thread2);
 	}
 
 	public void pauseMockLocation() {
 		Log.i(TAG, "pause mock");
-		handler.removeCallbacks(update_thread);
+		handler.removeCallbacks(update_thread2);
 	}
 
 	public void continueMockLocation() {
 		Log.i(TAG, "continue mock");
-		handler.post(update_thread);
+		handler.post(update_thread2);
 	}
 
 	public void stopMockLocation() {
 		Log.i(TAG, "stop mock");
-		handler.removeCallbacks(update_thread);
+		handler.removeCallbacks(update_thread2);
 		mLocationManager.removeTestProvider(LocationManager.GPS_PROVIDER);
 		mLocationManager.removeTestProvider(LocationManager.NETWORK_PROVIDER);
 //		init();
 	}
 
-	Runnable update_thread = new Runnable() {
+	Runnable update_thread2 = new Runnable() {
 		public void run() {
-////			unit = unit + 0.000035;
-//			unit += paceValue;
-//			if (unit > 1)
-//				unit = 0;
-			latitude = latSendList.get(count);
-			longitude = lonSendList.get(count);
-			count++;
+			LATITUDE = latSendList.get(count);
+			LONGITUDE = lonSendList.get(count);
 			setMockLocation(LocationManager.GPS_PROVIDER);
 			setMockLocation(LocationManager.NETWORK_PROVIDER);
-			handler.postDelayed(update_thread, UPDATE_TIME);
+			handler.postDelayed(update_thread2, UPDATE_TIME);
+			count++;
 		}
 	};
 
@@ -126,8 +107,8 @@ public class MockGpsService extends Service {
 
 		// Location newLocation = new Location(LocationManager.GPS_PROVIDER);
 		Location newLocation = new Location(PROVIDER);
-		newLocation.setLatitude(latitude);
-		newLocation.setLongitude(longitude);
+		newLocation.setLatitude(LATITUDE);
+		newLocation.setLongitude(LONGITUDE);
 		newLocation.setAltitude(500 + rad.nextFloat() * 50);
 		newLocation.setAccuracy(50.f);
 		newLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
