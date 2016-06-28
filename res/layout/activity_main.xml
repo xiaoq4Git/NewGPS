@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.codoon.btgpstest.SpeedActivity" >
+    tools:context="com.bitman.btgpstest.SpeedActivity" >
 
     <Button
         android:id="@+id/button1"
@@ -108,7 +108,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/start"
         android:layout_toRightOf="@+id/start"
-        android:onClick="OnStopClickListener"
+        android:onClick="onStopClickListener"
         android:visibility="invisible"
         android:text="停止" />
 

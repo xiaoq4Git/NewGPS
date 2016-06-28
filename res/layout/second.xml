@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.codoon.btgpstest.SpeedActivity" >
+    tools:context="com.bitman.btgpstest.SpeedActivity" >
 
     <Button
         android:id="@+id/button2"
@@ -17,7 +17,7 @@
         android:text="配速模拟" />
 
     <Button
-        android:id="@+id/record"
+        android:id="@+id/replay"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button2"
@@ -26,7 +26,7 @@
         android:text="GPS线路回放" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/record"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/record"
@@ -38,8 +38,8 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/record"
-        android:layout_below="@+id/record"
+        android:layout_alignLeft="@+id/replay"
+        android:layout_below="@+id/replay"
         android:layout_marginTop="28dp"
         android:text="轨迹名称" />
 

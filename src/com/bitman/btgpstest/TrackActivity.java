@@ -1,4 +1,4 @@
-package com.codoon.btgpstest;
+package com.bitman.btgpstest;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,12 +24,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class TrackActivity extends Activity {
-	private Button gpsRecord;
+	private Button gpsReplay,gpsRecord;
 	private EditText editText2;
 	private MockGpsService bindGpsService;
+	private static final String FILENAME = "/Gpsdata/record/";
+	public static final String TAG = TrackActivity.class.getName();
+	
 	private List<Double> latList = new ArrayList<Double>();
 	private List<Double> lonList = new ArrayList<Double>();
-	private static final String FILENAME = "/gpsdata/Sichuan.gpx";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +39,18 @@ public class TrackActivity extends Activity {
 		setContentView(R.layout.second);
 
 		Intent intent = new Intent(TrackActivity.this, MockGpsService.class);
-		// Log.i(TAG, "bindService()");
+		 Log.i(TAG, "bindService()");
 		bindService(intent, conn, Context.BIND_AUTO_CREATE);
 		initView();
 	}
 
 	public void initView() {
 		editText2 = (EditText) this.findViewById(R.id.et2);
+		gpsReplay = (Button) this.findViewById(R.id.replay);
 		gpsRecord = (Button) this.findViewById(R.id.record);
-		gpsRecord.setOnClickListener(new MySetOnClickListener());
+		
+		gpsRecord.setOnClickListener(new MyGetOnClickListener());
+		gpsReplay.setOnClickListener(new MySetOnClickListener());
 	}
 
 	public void onChangeSpeedActivityListener(View view) {
@@ -57,18 +62,30 @@ public class TrackActivity extends Activity {
 	private ServiceConnection conn = new ServiceConnection() {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
-			// Log.i(TAG, "onServiceDisconnected()");
+			 Log.i(TAG, "onServiceDisconnected()");
 		}
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			// TODO Auto-generated method stub
-			// Log.i(TAG, "onServiceConnected()");
 			MockGpsService.MyBinder binder = (MockGpsService.MyBinder) service;
 			bindGpsService = binder.getService1();
 		}
 	};
+	
+	private class MyGetOnClickListener implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			Log.i(TAG, "start record service");
+            Intent intent = new Intent(TrackActivity.this,
+                    RealGpsWriter.class);
+            startService(intent);
+			Toast.makeText(TrackActivity.this, "GPS采点开始...", Toast.LENGTH_SHORT).show();
+			Intent home = new Intent(Intent.ACTION_MAIN);
+			home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			home.addCategory(Intent.CATEGORY_HOME);
+			startActivity(home);
+		}
+	}
 
 	private class MySetOnClickListener implements OnClickListener {
 
@@ -80,7 +97,7 @@ public class TrackActivity extends Activity {
 					BufferedReader br = new BufferedReader(new FileReader(file));
 					String line;
 					StringBuffer sb = new StringBuffer();
-					Pattern p = Pattern.compile("lat=\"(.+)\" lon=\"(.+)\"");
+					Pattern p = Pattern.compile("lat=\"(.+)\".lon=\"(.+)\"");
 					while ((line = br.readLine()) != null) {
 						Matcher m = p.matcher(line);
 						if (m.find()) {
@@ -88,13 +105,14 @@ public class TrackActivity extends Activity {
 							lonList.add(Double.parseDouble(m.group(2)));
 						}
 					}
-					System.out.println("-------------------->" + latList.size());
-					System.out.println("-------------------->" + lonList.size());
 					bindGpsService.setLatSendList(latList);
 					bindGpsService.setLonSendList(lonList);
 					bindGpsService.startMockLocation();
-					// editText2.setText(sb.toString());
-					Toast.makeText(TrackActivity.this, "读取GPS点成功", Toast.LENGTH_LONG).show();
+					Toast.makeText(TrackActivity.this, "读取GPS记录成功，开始回放..", Toast.LENGTH_LONG).show();
+					Intent home = new Intent(Intent.ACTION_MAIN);
+					home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					home.addCategory(Intent.CATEGORY_HOME);
+					startActivity(home);
 				} catch (Exception e) {
 					Toast.makeText(TrackActivity.this, "读取失败", Toast.LENGTH_SHORT).show();
 				}

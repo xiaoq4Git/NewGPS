@@ -1,4 +1,4 @@
-package com.codoon.btgpstest;
+package com.bitman.btgpstest;
 
 import java.util.Random;
 import java.util.Timer;
@@ -46,7 +46,9 @@ public class SpeedActivity extends Activity {
 
 	public void onChangeTrackActivityListener(View view) {
 		Intent intent = new Intent(this, TrackActivity.class);
+
 		startActivity(intent);
+		this.finish();
 	}
 
 	public void OnStartClickListener(View view) {
@@ -83,7 +85,7 @@ public class SpeedActivity extends Activity {
 	public void onStopClickListener(View view) {
 		bStart.setVisibility(android.view.View.VISIBLE);
 		bPause.setVisibility(android.view.View.INVISIBLE);
-		bContinue.setVisibility(android.view.View.VISIBLE);
+		bContinue.setVisibility(android.view.View.INVISIBLE);
 		bStop.setVisibility(android.view.View.INVISIBLE);
 		Toast.makeText(this, "ֹͣ", Toast.LENGTH_SHORT).show();
 		bindService.stopMockLocation();
@@ -92,13 +94,11 @@ public class SpeedActivity extends Activity {
 	private ServiceConnection conn = new ServiceConnection() {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
 			Log.i(TAG, "onServiceDisconnected()");
 		}
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			// TODO Auto-generated method stub
 			Log.i(TAG, "onServiceConnected()");
 			MockLocationService.MyBinder binder = (MockLocationService.MyBinder) service;
 			bindService = binder.getService1();
